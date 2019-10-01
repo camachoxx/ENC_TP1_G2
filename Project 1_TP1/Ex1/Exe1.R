@@ -1,15 +1,30 @@
+library(rstudioapi) # to automatically set the working directory to this file's path.
+
+#set the working directory to this file's path
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 #Exercicio A
-sim.norm<-function(n,m,std){
+sim.norm<-function(n, mu, std){
+  
+  "Box-Muller Algorithm. This function generates samples
+  from two independent random variables X,Y ~ N(mu,std)."
+  
   x<-vector()
   y<-vector()
+  
   for (i in 1:n){
-  ome=2*pi*runif(1,0,1)
-  R=sqrt(-2*log(runif(1,0,1)))
-  x=c(x,R*cos(ome))
-  y=c(y,R*sin(ome))
+    
+    theta=2*pi*runif(1,0,1)
+    R=sqrt(-2*log(runif(1,0,1)))
+    
+    # add N(0,1) observations to the samples
+    x=c(x,R*cos(theta))
+    y=c(y,R*sin(theta))
   }
-  x=x*std+m
-  y=y*std+m
+  
+  # convert all observations from N(0,1) to N(mu,std)
+  x=x*std+mu
+  y=y*std+mu
   return(list(x,y))
 }
 
@@ -21,12 +36,10 @@ y=unlist(l[2])
 
 #Exercicio C
 #Make sure to have the working directory correct
-
 pdf("Exercicio1_Nx.pdf",width=7,height=5)
 hist(x,freq=F,main="Nx(0,4)",ylim=c(0,0.1),xlab="x",col="grey",cex.main=1.5,cex.axis=1.15,
      breaks=50); rug(x)
-curve(dnorm(x,0,4),add=T,lwd=3,lty=1,
-      from=-14,to=14)
+curve(dnorm(x,0,4), add=T, lwd=3, lty=1, from=-14, to=14)
 # drawing a box around the plot
 box(lwd=2)
 dev.off()
@@ -34,8 +47,7 @@ dev.off()
 pdf("Exercicio1_Ny.pdf",width=7,height=5)
 hist(y,freq=F,main="Ny(0,4)",ylim=c(0,0.1),xlab="x",col="grey",cex.main=1.5,cex.axis=1.15,
      breaks=50); rug(x)
-curve(dnorm(x,0,4),add=T,lwd=3,lty=1,
-      from=-14,to=14)
+curve(dnorm(x,0,4), add=T, lwd=3, lty=1, from=-14, to=14)
 # drawing a box around the plot
 box(lwd=2)
 dev.off()
