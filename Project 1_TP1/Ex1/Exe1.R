@@ -28,6 +28,11 @@ sim.norm<-function(n, mu, std){
   return(list(x,y))
 }
 
+Nvariable<-function(m,std){
+  return(unlist(sim.norm(3,m,std)[1])^2)
+}
+sum(Nvariable(0,1))
+
 #Exercicio B
 set.seed(123)
 l=sim.norm(1000,0,4)  #list with the first element x and the second y
