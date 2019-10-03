@@ -32,9 +32,12 @@ sim.quisquared<-function(n,df,lower=0,upper=1){
   }
   return(s)
 }
+
+v=sim.quisquared(10000,3)
+
 set.seed(123)
 # plotting the histogram
-hist(sim.quisquared(10000,3),freq=F,main="Quisquared(3)",ylim=c(0,0.5),xlab="x",col="grey",
+hist(sim.quisquared(10000,3),freq=F,main="Quisquared(3)",ylim=c(0,0.3),xlab="x",col="grey",
      cex.main=1.5,cex.lab=1.15)
 # adding the p.d.f. on top of the histogram
 curve(dchisq(x,3),add=T,lwd=3,lty=1)
@@ -44,27 +47,11 @@ box(lwd=2)
 f<-function(x){
   return(x*exp(-x))
 }
-rF<-function(n,lower=0,upper=1){
-  #generates random values from the distribution f(x)
-  y=vector()
-  for (i in 1:n){
-    u<-runif(1,lower,upper)
-    y=c(y,f(u))
-  }
-  return(y)
-}
-H<-function(n,lower=0,upper=1){
-  F=rF(n,lower,upper)
-  g=sim.quisquared(n,3,lower,upper)
-  return(F/g)
-}
 
-hist(H(10000),freq=F,main="Quisquared(3)",ylim=c(0,0.5),xlab="x",col="grey",
-     cex.main=1.5,cex.lab=1.15)
-# adding the p.d.f. on top of the histogram
-curve(f(x)/dchisq(x,3),add=T,lwd=3,lty=1)
-# drawing a box around the plot
-box(lwd=2)
+
+density(v,from=0,to=1)$Mean
+
+#testing zone
 
 h<-function(x){
   #function h(x)=f(x)/g(x)
@@ -72,7 +59,6 @@ h<-function(x){
   f(x)/dchisq(x,3)
 }
 
-#testing zone
 M=optimise(h,interval = c(0,5),maximum = T)$objective
 curve(h(x))
 curve(M*dchisq(x,3),ylim=c(0,0.5),xlim=c(0,10))
