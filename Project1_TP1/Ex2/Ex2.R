@@ -33,7 +33,6 @@ sim.quisquared<-function(n,df,lower=0,upper=1){
   return(s)
 }
 
-v=sim.quisquared(10000,3)
 
 set.seed(123)
 # plotting the histogram
@@ -48,8 +47,10 @@ f<-function(x){
   return(x*exp(-x))
 }
 
+M=optimise(h,interval = c(0,5),maximum = T)$objective
 
-density(v,from=0,to=1)$Mean
+gx=sim.quisquared(10000,3)
+
 
 #testing zone
 
@@ -59,7 +60,6 @@ h<-function(x){
   f(x)/dchisq(x,3)
 }
 
-M=optimise(h,interval = c(0,5),maximum = T)$objective
 curve(h(x))
 curve(M*dchisq(x,3),ylim=c(0,0.5),xlim=c(0,10))
 curve(f,type='l',add=T)
