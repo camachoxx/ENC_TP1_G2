@@ -16,4 +16,20 @@ m=10000
 x=runif(m,0,1)
 I_MC <- mean(g(x))
 error <- abs(I_MC - I$value) 
-I_MC_var <- var(g(x))/m # estimate of the variance
+Var_I_MC <- var(g(x))/m # estimate of the variance
+
+
+# (c) Describe and implement in R the Monte Carlo method of size m = 10000 based on 
+# control variables for estimating I. Report an estimate of the variance of the Monte
+# Carlo estimator I_C of I.
+
+m = 10000
+######
+c_star <- -cov(g(x), x)/var(x)   
+I_c <- mean(g(x) + c_st * (x - mean(x)))
+Var_I_C <- (var(g(x)) - ((cov(g(x), x))^2/var(x)))/m
+
+
+# (d) What's the percentage of variance reduction that is achieved when using I_C instead 
+# of I_MC?
+Var_red_p <- ((Var_I_MC - Var_I_C)/Var_I_MC)* 100
