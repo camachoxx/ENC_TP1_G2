@@ -13,12 +13,15 @@ sim.norm<-function(n, mu, std){
   y<-vector()
   
   # Box-Muller algorithm
-  theta=2*pi*runif(n,0,1)
-  R=sqrt(-2*log(runif(n,0,1)))
-  
-  # add N(0,1) observations to the samples
-  x=c(x,R*cos(theta))
-  y=c(y,R*sin(theta))
+  for (i in 1:n){
+    
+    theta=2*pi*runif(1,0,1)
+    R=sqrt(-2*log(runif(1,0,1)))
+    
+    # add N(0,1) observations to the samples
+    x=c(x,R*cos(theta))
+    y=c(y,R*sin(theta))
+  } 
   
   # convert all observations from N(0,1) to N(mu,std)
   x=x*std+mu

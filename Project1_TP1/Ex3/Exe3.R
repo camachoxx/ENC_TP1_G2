@@ -2,8 +2,8 @@
 
 # Last edited: 09/10.2019
 
-g <- function(x){sqrt(-log(x))/2}
 
+g <- function(x){sqrt(-log(x))/2}
 # (a) Use the R function integrate() to compute the value of I
 I <- integrate(g, lower = 0, upper = 1)
 I$value

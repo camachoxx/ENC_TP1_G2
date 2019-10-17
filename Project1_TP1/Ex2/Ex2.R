@@ -85,7 +85,5 @@ box(lwd=2)
 
 #testing zone
 curve(h(x))
-curve(M*dchisq(x,3),ylim=c(0,0.5),xlim=c(0,10), col = "blue")
+curve(M*dchisq(x,3),ylim=c(0,0.5),xlim=c(0,10))
 curve(f,type='l',add=T)
-text(9.9, .44, expression("f(x)"))
-text(9, .38, expression("M*dchisq(x,3)"), col = "blue")
