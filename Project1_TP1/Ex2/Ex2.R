@@ -1,4 +1,11 @@
-#Exercicio A
+#Exercise  2 
+rm(list=ls())
+
+
+#================================================================
+#                 Functions
+#================================================================
+#Exercise 1
 sim.norm<-function(n, mu, std){
   
   "Box-Muller Algorithm. This function generates samples
@@ -23,6 +30,7 @@ sim.norm<-function(n, mu, std){
   return(list("x"=x,"y"=y))
 }
 
+
 sim.quisquared<-function(n,df,lower=0,upper=1){
   #forms a quisquared distribution from random uniform values x=(0 to 1)
   s=vector()
@@ -33,59 +41,95 @@ sim.quisquared<-function(n,df,lower=0,upper=1){
   return(s)
 }
 
+f<-function(x){(x*exp(-x))}
+g<-function(x){1/(sqrt(2)*sqrt(pi))*exp(-x/2)*x^(1/2)}
+
+h<-function(x){
+  #function h(x)=f(x)/g(x)
+  sqrt(2)*sqrt(pi)*exp(-x/2)*x^(1/2)
+}
+
+#================================================================
+#                  2. (a)
+#================================================================
 
 set.seed(123)
 # plotting the histogram
 hist(sim.quisquared(10000,3),freq=F,main="Quisquared(3)",ylim=c(0,0.3),xlab="x",col="grey",
      cex.main=1.5,cex.lab=1.15)
+
 # adding the p.d.f. on top of the histogram
 curve(dchisq(x,3),add=T,lwd=3,lty=1)
 # drawing a box around the plot
 box(lwd=2)
 
-f<-function(x){
-  return(x*exp(-x))
-}
-h<-function(x){
-  #function h(x)=f(x)/g(x)
-  f(x)/dchisq(x,3)
-}
-#the max of h(x)=M
-M=optimise(h,interval = c(0,5),maximum = T)$objective
 
-sim=function(n){
-  v=vector()
-  count=0
+#the max of h(x)=M
+M<- h(1)
+optimise(h,interval = c(0,5),maximum = T)$objective
+
+
+sim<-function(n){
+  x<-vector()
+  yx <- vector()
+  rej_x<- vector()
+  yrejx<- vector()
+  count<- 0
   for (i in 1:n){
-    u=1
-    alpha=0
+    u<-1
+    alpha<-
+    k<-0
     while(u>alpha){
-    x<-sim.quisquared(1,3)
-    alpha=(1/M)*f(x)/dchisq(x,3)
-    u<-runif(1,0,1)
-    count=count+1
+      if(k!=0){rej_x <- c(rej_x,xc); yrejx <- c(yrejx,u*M*g(xc))}
+      xc<-sim.quisquared(1,3)
+      alpha=(1/M)*h(xc)
+      u<-runif(1,0,1)
+      count<- count+1
+      k <- k+1
     }
-  v=c(v,x)
+    x=c(x,xc)
+    yx <- c(yx,u*M*g(xc))
   }
-rr=count/n
-return(list("vector"=v,"rejection_rate"=rr))
+rr<-count/n
+return(list(x=x,rej_x=rej_x,yx=yx,yrejx=yrejx,"rejection_rate"=rr))
 }
+
+#================================================================
+#                  2. (b)
+#================================================================
 
 set.seed(123)
 fl=sim(10000)
-ff=fl$vector
+ff=fl$x
 rejection_rate=fl$rejection_rate
+rejection_rate
+
+#================================================================
+#                  2. (c)
+#================================================================
+
+
 # plotting the histogram
 hist(ff,freq=F,main="f(x)",ylim=c(0,0.4),xlab="x",col="grey",
-     cex.main=1.5,cex.lab=1.15)
+     cex.main=1.5,cex.lab=1.15, breaks = 50)
 # adding the p.d.f. on top of the histogram
 curve(f(x),add=T,lwd=3,lty=1)
 # drawing a box around the plot
 box(lwd=2)
 
-#testing zone
-curve(h(x))
-curve(M*dchisq(x,3),ylim=c(0,0.5),xlim=c(0,10), col = "blue")
-curve(f,type='l',add=T)
-text(9.9, .44, expression("f(x)"))
-text(9, .38, expression("M*dchisq(x,3)"), col = "blue")
+#================================================================
+#                  2. (d)
+#================================================================
+
+#hit-and-miss plot
+plot(f,lwd=3,lty=1,ylab = "u*M*g(x)",main="",cex.axis=1.5,col="black",cex.main=2,
+     cex.lab=1.5,ylim=c(0,0.4), xlim=c(0,6),pch=16,xlab="x",cex=1.5)
+curve(M*g(x),lwd=3,col=4,cex=2,add=T)
+set.seed(123)
+simul <- sim(10)
+points(simul$x,simul$yx,pch=4,cex=1,lwd=1.5)
+points(simul$rej_x,simul$yrejx,col=2,pch=4,cex=1,lwd=1.5)
+box(lwd=2)
+legend(4.5, 0.36, legend=c("f(x)", "Mg(x)"),col=c("black", "blue"), lty=c(1,1),cex=1)
+
+
