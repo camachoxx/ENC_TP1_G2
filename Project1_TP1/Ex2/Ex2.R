@@ -1,10 +1,10 @@
-#Exercise  2 
+#================================================================
+#                    Exercise 2
+#================================================================
 rm(list=ls())
 
+#========================Functions===============================
 
-#================================================================
-#                 Functions
-#================================================================
 #Exercise 1
 sim.norm<-function(n, mu, std){
   
@@ -49,9 +49,7 @@ h<-function(x){
   sqrt(2)*sqrt(pi)*exp(-x/2)*x^(1/2)
 }
 
-#================================================================
-#                  2. (a)
-#================================================================
+#============================(A)===============================
 
 set.seed(123)
 # plotting the histogram
@@ -74,7 +72,6 @@ sim<-function(n){
   yx <- vector()
   rej_x<- vector()
   yrejx<- vector()
-  count<- 0
   for (i in 1:n){
     u<-1
     alpha<-
@@ -84,52 +81,48 @@ sim<-function(n){
       xc<-sim.quisquared(1,3)
       alpha=(1/M)*h(xc)
       u<-runif(1,0,1)
-      count<- count+1
       k <- k+1
     }
     x=c(x,xc)
     yx <- c(yx,u*M*g(xc))
   }
-rr<-count/n
-return(list(x=x,rej_x=rej_x,yx=yx,yrejx=yrejx,"rejection_rate"=rr))
+return(list(x=x,rej_x=rej_x,yx=yx,yrejx=yrejx))
 }
 
-#================================================================
-#                  2. (b)
-#================================================================
+#============================(B)===============================
 
 set.seed(123)
 fl=sim(10000)
 ff=fl$x
-rejection_rate=fl$rejection_rate
+rejection_rate= length(fl$rej_x)/(length(fl$rej_x)+length(fl$x)) 
 rejection_rate
 
-#================================================================
-#                  2. (c)
-#================================================================
+#============================(C)===============================
 
-
+pdf("Exercicio2_c.pdf",width=7,height=5)
 # plotting the histogram
 hist(ff,freq=F,main="f(x)",ylim=c(0,0.4),xlab="x",col="grey",
      cex.main=1.5,cex.lab=1.15, breaks = 50)
 # adding the p.d.f. on top of the histogram
-curve(f(x),add=T,lwd=3,lty=1)
+curve(f(x),add=T,lwd=3,lty=1,col=c('blue'))
 # drawing a box around the plot
 box(lwd=2)
+# Add a legend
+legend(10,0.4, legend=("f(x)"), col=c("blue"), lty=1:2, cex=0.8)
+dev.off()
 
-#================================================================
-#                  2. (d)
-#================================================================
+#============================(D)===============================
 
 #hit-and-miss plot
-plot(f,lwd=3,lty=1,ylab = "u*M*g(x)",main="",cex.axis=1.5,col="black",cex.main=2,
-     cex.lab=1.5,ylim=c(0,0.4), xlim=c(0,6),pch=16,xlab="x",cex=1.5)
-curve(M*g(x),lwd=3,col=4,cex=2,add=T)
+pdf("Exercicio2_d.pdf",width=7,height=5)
+plot(f,lwd=3,lty=1,ylab = "u*M*g(x)",main="Hit-and-miss Plot",cex.axis=1.15,col="black",cex.main=1.5,
+     cex.lab=1.15,ylim=c(0,0.4), xlim=c(0,8),pch=16,xlab="x",cex=1.5)
+curve(M*g(x),lwd=3,col="blue",cex=2,add=T)
 set.seed(123)
 simul <- sim(10)
 points(simul$x,simul$yx,pch=4,cex=1,lwd=1.5)
 points(simul$rej_x,simul$yrejx,col=2,pch=4,cex=1,lwd=1.5)
 box(lwd=2)
-legend(4.5, 0.36, legend=c("f(x)", "Mg(x)"),col=c("black", "blue"), lty=c(1,1),cex=1)
-
+legend(6, 0.36, legend=c("f(x)", "Mg(x)"),col=c("black", "blue"), lty=c(1,1),cex=0.8)
+dev.off()
 
