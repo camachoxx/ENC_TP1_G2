@@ -97,4 +97,5 @@ for(sds in sd1){
 
 plot(v1,power,pch=19,cex=1.5,xlab=expression(variance), ylab="Power",cex.lab=1.5) 
 lines(v1,power,type="l") 
+
 box(lwd=2)
