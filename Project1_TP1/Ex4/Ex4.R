@@ -1,33 +1,47 @@
+library(rstudioapi) # to automatically set the working directory to this file's path.
+
+#set the working directory to this file's path
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+
 m=1000; n=25; alpha=0.05; mu0=1; sigma=sqrt(3) 
-set.seed(789); 
-
-
-# generate m datasets/samples under H0 
-samples <- replicate(m, rnorm(n,mu0,sigma))
-#  the histogram of the simulated ??1,...,??1000 with the theoretical density superimposed; 
-hist(samples, freq = F, xlim = c(-7,7), ylim = c(0, 0.25))
-curve(dnorm(x, mu0, sigma), col = "red", lwd = "2", add = T)
-box(lwd=2)
-
 
 xi <- vector()
+set.seed(789)
 
 for(i in 1:m){ 
-  sam <- rnorm(n,mu0,sigma^2)
-  z = (sam - mu0)/sigma
-  xi <- c(xi, (n-1) * var(z) / 2)
+  sam <- rnorm(n,mu0,sigma)
+  xi <- c(xi, (n-1) * var(sam) / 2)
   xi
 } 
+
+##
+#  the histogram of the simulated ??1,...,??1000 with the theoretical density superimposed; 
+pdf("Exercicio4_a_hist.pdf",width=7,height=5)
+hist(xi, freq = F , main = expression(paste("Histogram of 1000 simulated samples from  ", 
+                                            frac((n-1)*S^2, 2))),
+     col ="grey", xlab = "x",  xlim = c(0,80), ylim = c(0, 0.06))
+curve(dchisq(x, n-1), col = "red", lwd = "2", add = T)
+legend(55,0.06, legend=(expression(paste("True ", chi[df=24]^2, " superimposed"))),
+       col="red", lty=1:2, cex=0.75)
+box(lwd=2)
+dev.off()
+
+###
 
 
 # plot of the empirical cumulative distribution (ecdf) of ??1,...,??1000 with the theoretical 
 # cumulative probability function (pdf) superimposed 
 
 empi.cdf <- ecdf(xi)
-plot(empi.cdf,xlim=c(0,60),main="ECDF", ylab="probability",cex=2,lwd=1.5) 
-lines(seq(0, 60, by=.1), pchisq(seq(0, 60, by=.1),n-1), col=2) 
-legend("bottomright", 0, 0.95, legend=c("ecdf","cdf"), col=c("black","red"),lty=1,lwd=c(1.5,1), cex=0.8)
 
+pdf("Exercicio4_a_ecdf_pdf.pdf",width=7,height=5)
+plot(empi.cdf,xlim=c(0,70),main="e.c.d.f. and p.d.f. of the simulated X1,...,X1000",
+     ylab="probability",cex=2,lwd=1.5) 
+lines(seq(0, 70, by=.1), pchisq(seq(0, 70, by=.1),n-1), col=2) 
+legend(-2.8,0.96, legend=c("ecdf","theoretical pdf of chi^2 (n-1)"), col=c("black","red"),
+       lty=1,lwd=c(1.5,1), cex=0.8)
+dev.off()
 
 # Kolmogorov-Smirnov two-sided test
 ks.test(xi, pchisq, n-1, alternative = "two.sided")
@@ -61,12 +75,12 @@ for(i in 1:m){
   phat=mean(p<alpha)
   phat  # empirical signi???cance level ??_hat
 }
-phat
+phat # 0.052
 
 ##
 
 ##
-binom.test(phat*m,m,p=0.05)
+bin.test <- binom.test(phat*m,m,p=0.05)
 #data:  phat * m and m
 # number of successes = 60, number of trials = 1000, p-value = 0.4248
 # alternative hypothesis: true probability of success is not equal to 0.05
@@ -75,6 +89,8 @@ binom.test(phat*m,m,p=0.05)
 # sample estimates:
 #   probability of success 
 # 0.044 
+
+p.depart = bin.test$p.value; p.depart # 0.7713761
 
 
 # c) For the hypothesis test above and the m simulations, construct a power plot for the 2 alternative
@@ -95,7 +111,10 @@ for(sds in sd1){
   power=c(power,mean(p<alpha)) 
 } 
 
-plot(v1,power,pch=19,cex=1.5,xlab=expression(variance), ylab="Power",cex.lab=1.5) 
+pdf("Exercicio4_c_power.pdf",width=7,height=5)
+plot(v1,power,pch=20,cex=1.5,xlab=expression(variance), 
+     main = "power plot for alternative variance values (4,...,50).", ylab="Power",cex.lab=1.5) 
 lines(v1,power,type="l") 
-
+abline(h = 0.9, v = 7.2, lty=c(2,2), col="blue")
 box(lwd=2)
+dev.off()
