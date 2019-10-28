@@ -64,6 +64,7 @@ empi.quantiles <- quantile(xi, probs = c(.9,.95,.975)); empi.quantiles #       9
 
 # Monte Carlo simulation
 p <- numeric(m)
+set.seed(789)
 for(i in 1:m){ 
   x=rnorm(n,mu0,sigma)
   X2 = (n-1)*sd(x)^2/sigma^2
@@ -75,22 +76,22 @@ for(i in 1:m){
   phat=mean(p<alpha)
   phat  # empirical signi???cance level ??_hat
 }
-phat # 0.052
+phat # 0.042
 
 ##
 
 ##
-bin.test <- binom.test(phat*m,m,p=0.05)
+bin.test <- binom.test(phat*m,m,p=0.05); bin.test
 #data:  phat * m and m
-# number of successes = 60, number of trials = 1000, p-value = 0.4248
+# number of successes = 42, number of trials = 1000, p-value = 0.2761
 # alternative hypothesis: true probability of success is not equal to 0.05
 # 95 percent confidence interval:
-#  0.03214950 0.05862042
+#  0.03043471 0.05635029
 # sample estimates:
-#   probability of success 
-# 0.044 
+#  probability of success 
+# 0.042 
 
-p.depart = bin.test$p.value; p.depart # 0.7713761
+p.depart = bin.test$p.value; p.depart # 0.2760517
 
 
 # c) For the hypothesis test above and the m simulations, construct a power plot for the 2 alternative
