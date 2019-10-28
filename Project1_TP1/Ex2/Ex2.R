@@ -70,14 +70,17 @@ optimise(h,interval = c(0,5),maximum = T)$objective
 sim<-function(n){
   x<-vector()
   yx <- vector()
-  rej_x<- vector()
-  yrejx<- vector()
+  rej_x<- vector() #rejected candidates
+  yrejx<- vector() # y pos of rejected candidates
   for (i in 1:n){
     u<-1
-    alpha<-
+    alpha<-0
     k<-0
     while(u>alpha){
-      if(k!=0){rej_x <- c(rej_x,xc); yrejx <- c(yrejx,u*M*g(xc))}
+      if(k!=0){
+        rej_x <- c(rej_x,xc);
+        yrejx <- c(yrejx,u*M*g(xc) )
+      }
       xc<-sim.quisquared(1,3)
       alpha=(1/M)*h(xc)
       u<-runif(1,0,1)
@@ -86,7 +89,7 @@ sim<-function(n){
     x=c(x,xc)
     yx <- c(yx,u*M*g(xc))
   }
-return(list(x=x,rej_x=rej_x,yx=yx,yrejx=yrejx))
+return(list(x=x, rej_x=rej_x, yx=yx, yrejx=yrejx))
 }
 
 #============================(B)===============================
@@ -107,6 +110,7 @@ hist(ff,freq=F,main="f(x)",ylim=c(0,0.4),xlab="x",col="grey",
 curve(f(x),add=T,lwd=3,lty=1,col=c('blue'))
 # drawing a box around the plot
 box(lwd=2)
+
 # Add a legend
 legend(10,0.4, legend=("f(x)"), col=c("blue"), lty=1:2, cex=0.8)
 dev.off()
@@ -120,8 +124,8 @@ plot(f,lwd=3,lty=1,ylab = "u*M*g(x)",main="Hit-and-miss Plot",cex.axis=1.15,col=
 curve(M*g(x),lwd=3,col="blue",cex=2,add=T)
 set.seed(123)
 simul <- sim(10)
-points(simul$x,simul$yx,pch=4,cex=1,lwd=1.5)
-points(simul$rej_x,simul$yrejx,col=2,pch=4,cex=1,lwd=1.5)
+points(simul$x, simul$yx, pch=4,cex=1,lwd=1.5)
+points(simul$rej_x, simul$yrejx,col=2,pch=4,cex=1,lwd=1.5)
 box(lwd=2)
 legend(6, 0.36, legend=c("f(x)", "Mg(x)"),col=c("black", "blue"), lty=c(1,1),cex=0.8)
 dev.off()
