@@ -32,9 +32,6 @@ sim.norm<-function(n, mu, std){
   return(samples)
 }
 
-res = sim.norm(10,0,1); res
-
-
 #Exercicio B - generate 10k samples from X~(0,4)
 set.seed(123)
 mu = 0
