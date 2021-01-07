@@ -97,7 +97,7 @@ lesscpy==0.13.0
 librosa==0.6.3
 lightgbm==2.2.3
 llvmlite==0.27.1
-lxml==4.2.5
+lxml==4.6.2
 Mako==1.0.9
 Markdown==3.0.1
 MarkupSafe==1.1.0
